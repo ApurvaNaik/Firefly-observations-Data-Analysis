@@ -1,0 +1,140 @@
+# Exploring the Firefly Observations dataset
+#### * By Apurva Naik on April 11, 2016 *
+#### This [dataset](https://legacy.mos.org/fireflywatch/data_analysis) is maintained and updated by the Museum of Science, Boston
+### 1. The firefly Observations dataset
+When most of us think about our childhood and summers, many things come to our mind. We might think about ice creams, the 4th of July fireworks or the deafening chirruping of the crickets. What comes most prominently to my mind is my firefly lantern! I used to roam around in the meadows near my house at twilight and collect as many fireflies as I could in my glass bottle just to see them twinkle at night before I went to bed. (Of course, having a conscientious mother, I would release them first thing in the morning!). So, when the time came to crunch some data, I knew what I was going to look for! There is much that we don't know about what ecological and human-made factors affect firefly populations. The data collected for Firefly Watch can shed some light on this problem and maybe, we will gain a better understanding of the elements that influence survival of the fireflies.
+
+The dataset contains all of the data from the 2008 - 2014 seasons. It is divided into three data sets: habitats, observations, and individual firefly reporting. This data is a collection of individual reporting from all over the USA and the world . The data set is very unclean: there is a lot of inconsistency, blank fields and redundancy.
+
+In the first part of the report, I have cleaned the data and done some Feature Engineering to see which properties of the habitat are most important for sustaining firefly populations. In the second part, I've tried to classify the fireflies into different species and have plotted this on a map, based on the location coordinates in the dataset.
+
+Each and every step has been explained in the code. Here, I will present and elaborate on some of my findings.
+
+### 2. Exploring data
+#### Identifying the relevant predictors
+As we are interested in looking at the factors most important for sustaining firefly population, it makes sense to include only those in our classification model. Hence we have only kept environmental factors describing the habitat and individual practices like Lawn care, landscaping and light sources. It is important to include data about light sources since most fireflies find a mate by flashing. They must be able to see the flash of a prospective mate and return the flash and we'd like to determine if light plays a detrimental role in sustaining firefly population.
+
+The dataset has 30785 rows and 53 columns. There are 52 predictors and 1 response variable, __Number.Seen.in.10.s__. I will input the correct number by multiplying the column values by 10 and rename the column to __Number__ for easy reference. The response variable __Number__ appears to be continuous variable, but is actually discontinuous between the intervals: 10, 20, 30, 40 and 50. Rather than keeping is as a numeric variable, I will converted it into a factor  __Population__.
+
+I am interested in identifying the predictors necessary for sustaining firefly population. It makes sense to define the response variable that will take the value of 1 if __Population__ is  "High" (11 < __Number__) and 0 if __Population__ is "Low" (__Number__ < 10 ).
+
+#### Identifying the Missing values
+
+The dataset was imported in such a way that all missing values, if any, were represented as NA. Checking for the number of NAs according to column:
+
+Variable | Number of NAs
+--- | --- | ---
+State|22
+Location|230
+Your.Backyard.|230
+Tree.Type|230
+Creek.River..yards.away.|230
+Pond.Lake..yards.away.|230
+Freshwater.Marsh..yards.away.|230
+Salt.Water.Marsh..yards.away.|230
+Agricultural.Field..yards.away.|230
+Cultivated.Bog..yards.away.|230
+Golf.Course..yards.away.|230
+Swimming.Pool..yards.away.|230
+Man.made.Pool..yards.away.|230
+Ocean..yards.away.|230
+Is.the.Grass.Mowed.|230
+Fertilized|230
+Weed.Killer|230
+Pesticides|230
+Cast.Light|230
+Street.Light..yards.away.|673
+Light.Source..yards.away.|7838
+
+22 predictors have NAs. For the predictors __Light.Source..yards.away.__ NA values comprise of about 25% of all their observations! This cannot be good for our classification problem.
+#### Missing value treatment
+
+- Mode imputation: In this method we will fill the missing values with the most common value in that column.
+ - __Light.Source..yards.away.__ This predictor has nearly 25% missing values. Any kind of imputation can add more bias to the model, so it is best to exclude this predictor from our analysis. This is vey unfortunate, since this predictor might be quite important.
+ - __Street.Light..yards.away.__ This predictor has just above 2% missing values, so we will go ahead and replace them with the mode of that column.
+
+
+- Deletion of missing values: Now, the maximum number of missing values any column has is 230, which is less than 2 % of the total data. Also, since most columns have exactly 230 values missing, they are most probably in the same rows. Removing these values from our analysis will not be detrimental to the outcome, so we'll go ahead and delete the rows containing these missing values.
+
+#### Feature Engineering for better representation of variables
+After converting all character variables to factor, we see that some variables like __State__ and __Country__ have many levels.
+
+![Alt text](https://github.com/ApurvaNaik/Firefly-observations-Data-Analysis/blob/master/img/image1.png?raw=true)
+
+From the above figure we see that some variables appear more number of times than other. We will 'bin' these frequently occurring variables and group the ones that appear rarely.
+#### Identifying the most important predictors
+Here, I want to visualize __Population__ with respect to different environmental factors
+
+![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/cat.plot1.png)
+![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/cat.plot3.png)
+![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/cat.plot2.png)
+![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/cont.plot.png)
+
+The most promising predictors with respect to habitat properties seem to be:
+__Your.Backyard.__,
+__Grassy__,
+__Wetland__,
+__Forest__,
+__Cropland__,
+__Pasture__,
+__Beach__,
+__Hedge.Rows.Thick.Shrubs__,
+__Tall.Grass__,
+__Tree.Type__,
+__Creek.River..yards.away.__,
+__Freshwater.Marsh..yards.away.__,
+__Salt.Water.Marsh..yards.away.__,
+__Agricultural.Field..yards.away.__,
+__Cultivated.Bog..yards.away.__,
+__Golf.Course..yards.away.__,
+__Swimming.Pool..yards.away.__,
+__Man.made.Pool..yards.away.__,
+__Ocean..yards.away.__,
+__Is.the.Grass.Mowed.__,
+__Fertilized__,
+__Weed.Killer__,
+__Pesticides__,
+__Street.Light..yards.away.__,
+__PopulationDensity__,
+__newFactorCountry__
+
+The above mentioned categorical and all numerical predictors are included in the analysis.
+
+### 3. Which are the most important predictors?
+I'm using random forest to find out the factors most important for survival of fireflies. For the purpose of cross validation, I have divided the datas set into a training set and a test set. The test set will be used to evaluate the fit.
+With the inclusion of all relevant predictors, the error plot indicates the model is doing a fair job. This is concluded from the Out Of Bag (OOB) error, which is about 0.16.
+![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/errplot.rf.firefly.png)
+#### Evaluating performance of the model
+
+ Using the __prop.table()__ function, I have found out that 63% of the observations belong to the "Medium" class of the __PopulationDensity__ response. Thus if I have no further information, I would say the the probability for the the firefly population to belong to the class "Medium" is 63%. I created a column containing all responses as "Medium". I will use the __mean()__ function to compute the fraction of the total population for which the prediction was correct. The mean value for the above test response is 0.26, which implies that 26% of the responses were miss-classified. This is nearly equal to the mean value for the model. The model is not doing better than random guessing.
+
+#### Improving the performance  of the model
+
+Model performance depends on the predictors that are included. According to rule of thumb, performance improves as number of predictors increase. However, this can also lead to overfitting of data, which increases the test error. Random forests are generally immune from highly correlated predictors, yet it can be helpful to exclude predictors which repeat the information.
+
+For example, in the Firefly Observations dataset, __Latitude__, __Longitude__, __Habitat.ID.__, __State__ and __Country__ contain basically the same information in different forms: Location.
+
+The __importance()__ function can be used to see which are the most influential predictors based on their mean decrease in prediction accuracy. The importance plot shows the relative importance of the predictors with respect to the Gini Index. From the importance plot, it is clear, and not surprising that temperature and location play an important role. The strong correlation between the location predictors might dominate the less strong, yet more important predictors that appear lower on the plot. This can lead to us drawing wrong conclusions.
+
+![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/impPlot.rf.firefly.png)
+
+###### *Will it help if we remove all of these and keep only __Latitude__ and __Longitude__?*
+The error plot indicates the model is performing better after removing the __Habitat.ID.__, __State__ and __Country__ predictors. The OOB error is 0.13, an improvement from the previous model! This also confirms the high correlation between the excluded predictors.
+
+![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/errplot.rf.firefly.clean.png)
+
+Looking at the importance plot, as expected, the important predictors are related to temperature and location. __Year__ is not too far behind indicating that there were some warm summers when the firefly population exploded. Also, having a water source nearby helps the fireflies. The moist soil and air are essential for the survival of the firefly larvae [2]. Human activity like lawn mowing and using pesticides is also fairly important.
+
+![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/impPlot.rf.firefly.clean.png)
+
+#### Reassessing the importance of predictors
+This is done by examining the partial dependence plots. The figure below shows single-variable partial dependence plots of the most relevant population predictors.
+
+![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/partialPlot.png)
+
+The hash marks at the base of each plot delineate the deciles of the data distribution of the corresponding variables. Note that here the data density is lower near the edges, especially for larger values. This causes the curves to be somewhat less well determined in those regions. The vertical scales of the plots are nearly the same, and give a visual comparison of the relative importance of the different variables.
+
+__Population__ seems to have a non-monotonic partial dependence on __Month__, indicating that the dependence is the strongest for the months from May to August. In contrast, the partial dependence on __Temperature..F.__ is monotonic increasing, being nearly linear over the main body of the data. The partial dependency on __Latitude__ and __Longitude__ is relatively weak, indicated by the range of the Y axis.
+
+### 4. Conclusion
+From our analysis we conclude that climate and location of the habitat are extremely important for the survival of fireflies. Natural or artificial sources of water play an important role in maintaining moisture levels. Human activity also plays an important role, though not as much as climate.
