@@ -11,7 +11,7 @@ In the first part of the report, I have cleaned the data and done some Feature E
 Each and every step has been explained in the code. Here, I will present some of my findings.
 
 ### 2. Exploring data
-The heat map below shows the population distribution of fireflies in the country according to the [Fire Observations dataset.](https://legacy.mos.org/fireflywatch/data_analysis)
+The heat map below shows the population distribution of fireflies in the country according to the [Fire Observations dataset.](https://legacy.mos.org/fireflywatch/data_analysis) It is clear that some areas in New England and the midwest are hotspots for these bugs. Proximity to a large water body seems to work in favor of the fireflies. I would like to see if this can be confirmed from the analysis.
 ![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/pop.usa.png)
 
 #### Identifying the relevant predictors
@@ -128,7 +128,7 @@ The error plot indicates the model is performing better after removing the __Hab
 
 ![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/errplot.rf.firefly.clean.png)
 
-Looking at the importance plot, as expected, the important predictors are related to temperature and location. __Year__ is not too far behind indicating that there were some warm summers when the firefly population exploded. Also, having a water source nearby helps the fireflies. The moist soil and air are essential for the survival of the firefly larvae [2]. Human activity like lawn mowing and using pesticides is also fairly important.
+Looking at the importance plot, as expected, the important predictors are related to temperature and location. __Year__ is not too far behind indicating that there were some warm summers when the firefly population exploded. Human activity like lawn mowing and using pesticides is also fairly important.
 
 ![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/impPlot.rf.firefly.clean.png)
 
@@ -142,7 +142,5 @@ __Population__ seems to have a non-monotonic partial dependence on __Month__, in
 
 The hash marks at the base of each plot delineate the deciles of the data distribution of the corresponding variables. Note that here the data density is lower near the edges, especially for larger values. This causes the curves to be somewhat less well determined in those regions.
 
-
-
 ### 4. Conclusion
-From our analysis we conclude that climate and location of the habitat are extremely important for the survival of fireflies. Natural or artificial sources of water play an important role in maintaining moisture levels. Human activity also plays an important role, though not as much as climate.
+From our analysis we conclude that climate and location of the habitat are extremely important for the survival of fireflies.  in maintaining moisture levels. Human activity also plays an important role, though not as much as climate. From the heat map, it seemed that proximity to the ocean or a huge lake might play an important role, but this was not the case, since __Ocean..yards.away._ features quite low in the importance plot. However, since variables like __Creek.River..yards.away.__ and __Swimming.Pool..yards.away.__ feature way up, sources of water do play an important role in maintaining favorable environment. The moist soil and air near the water source are essential for the [survival](https://legacy.mos.org/fireflywatch/environmental_factors) of the firefly larvae.
