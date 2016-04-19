@@ -11,6 +11,9 @@ In the first part of the report, I have cleaned the data and done some Feature E
 Each and every step has been explained in the code. Here, I will present some of my findings.
 
 ### 2. Exploring data
+The heat map below shows the population distribution of fireflies for New England.
+![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/pop.NE.png)
+
 #### Identifying the relevant predictors
 I have  only included predictors describing the habitat and individual practices like lawn care and landscaping. It is important to include data about light sources since most fireflies find a mate by flashing. They must be able to see the flash of a prospective mate and return the flash and we'd like to determine if light plays a detrimental role in sustaining firefly population. Climate and location of the habitat play a crucial role, so these are also included in the analysis.
 
@@ -52,7 +55,6 @@ Light.Source..yards.away.|7838
  - Mode imputation: In this method we will fill the missing values with the most common value in that column.
  - __Light.Source..yards.away.__ This predictor has nearly 25% missing values. Any kind of imputation can add more bias to the model, so it is best to exclude this predictor from our analysis. This is vey unfortunate, since this predictor might be quite important.
  - __Street.Light..yards.away.__ This predictor has just above 2% missing values, so we will go ahead and replace them with the mode of that column.
-
 
 - Deletion of missing values: Now, the maximum number of missing values any column has is 230, which is less than 2 % of the total data. Also, since most columns have exactly 230 values missing, they are most probably in the same rows. Removing these values from our analysis will not be detrimental to the outcome, so we'll go ahead and delete the rows containing these missing values.
 
