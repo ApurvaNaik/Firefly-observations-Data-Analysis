@@ -11,8 +11,8 @@ In the first part of the report, I have cleaned the data and done some Feature E
 Each and every step has been explained in the code. Here, I will present some of my findings.
 
 ### 2. Exploring data
-The heat map below shows the population distribution of fireflies for New England.
-![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/pop.NE.png)
+The heat map below shows the population distribution of fireflies in the country according to the [Fire Observations dataset.](https://legacy.mos.org/fireflywatch/data_analysis)
+![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/pop.usa.png)
 
 #### Identifying the relevant predictors
 I have  only included predictors describing the habitat and individual practices like lawn care and landscaping. It is important to include data about light sources since most fireflies find a mate by flashing. They must be able to see the flash of a prospective mate and return the flash and we'd like to determine if light plays a detrimental role in sustaining firefly population. Climate and location of the habitat play a crucial role, so these are also included in the analysis.
