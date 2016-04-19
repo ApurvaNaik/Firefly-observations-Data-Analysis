@@ -142,5 +142,9 @@ __Population__ seems to have a non-monotonic partial dependence on __Month__, in
 
 The hash marks at the base of each plot delineate the deciles of the data distribution of the corresponding variables. Note that here the data density is lower near the edges, especially for larger values. This causes the curves to be somewhat less well determined in those regions.
 
-### 4. Conclusion
+### 4. Conclusions from the analysis
 From our analysis we conclude that climate and location of the habitat are extremely important for the survival of fireflies.  in maintaining moisture levels. Human activity also plays an important role, though not as much as climate. From the heat map, it seemed that proximity to the ocean or a huge lake might play an important role, but this was not the case, since __Ocean..yards.away._ features quite low in the importance plot. However, since variables like __Creek.River..yards.away.__ and __Swimming.Pool..yards.away.__ feature way up, sources of water do play an important role in maintaining favorable environment. The moist soil and air near the water source are essential for the [survival](https://legacy.mos.org/fireflywatch/environmental_factors) of the firefly larvae.
+
+### 5. Identifying the types of fireflies
+Fireflies in the United States predominantly belong to [3 different genera.](https://legacy.mos.org/fireflywatch/types_of_fireflies) I have attempted to identify the genus of the firefly based on the color of their flash and flash pattern. As the flash pattern is different for males and females, I have considered only the male subset of the data based on the __Field.location__ observation. This observation notes if the bug was flying or perched. Typically,[the males flash in flight while they are patrolling an area for females.](https://legacy.mos.org/fireflywatch/identifying_gender)
+![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/genus.plot.png)
