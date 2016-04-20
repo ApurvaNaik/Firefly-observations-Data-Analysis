@@ -176,6 +176,7 @@ col            Double Flickering Quadruple Single Triple Variable
 The *Photinus* seem to be the most common, followed by *Photuris* and *Pyractomena*. However, the possibility of people mis-identifying yellow-green flash as green and vice-versa can distort the results. To counter this, I have included the __Flash.Pattern__ observations. A typical habitat hosts different kinds of fireflies and each firefly needs a method of picking out his or her own kind. Each species of firefly has a fairly distinctive flash pattern and each differ in a [number of ways.](https://legacy.mos.org/fireflywatch/flashing_facts) To know the flashing patterns of different types of fireflies, I have referenced some literature, which I have listed at the bottom of this page.
 Using the flash pattern chart, thus derived, I developed a methodology ti identify the genus of the firefly.
 ![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/flowchart.png)
+
 Cross-tabulating genus and color and genus and flash pattern:
 ```R
 table(attr.firefly$genus, attr.firefly$flash)
