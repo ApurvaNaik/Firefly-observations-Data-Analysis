@@ -71,7 +71,8 @@ Here, I have to visualized __Population__ with respect to the categorical predic
 ![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/cat.plot3.png)
 ![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/cat.plot2.png)
 
-Nnow, visualizing the correlation between the numerical predictors. There is a strong correlation between __Habitat.ID__ and __Year__.
+Visualizing the correlation between the numerical predictors. There is a strong correlation between __Habitat.ID__ and __Year__.
+
 ![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/cont.plot.png)
 
 
@@ -111,20 +112,29 @@ In case of random forest, there is no need to split the data into trainig and te
 
  With the inclusion of all relevant predictors, the error plot indicates the model is doing a fair job. This is concluded from the OOB error which is about 0.16.
 
- Using the __prop.table()__ function, I have found out that 80% of the observations belong to class "High" of the __Population__ response. If I have no further information, the probability for the the firefly population to belong to the class "High" is 80%. This means that there is a 20% chance that the observation will be classified into the wrong class, giving me an error of 0.2. The OOB error for the model is 0.16, implying the model missclassified the observation 16 out of 100 times. the model does better than random guessing!
+ Using the __prop.table()__ function, I have found out that 80% of the observations belong to class "High" of the __Population__ response.
+
+```R
+> prop.table(table(firefly.full$Population))
+
+     High       Low
+0.8037861 0.1962139
+```
+
+ If I have no further information, the probability for the the firefly population to belong to the class "High" is 80%. This means that there is a 20% chance that the observation will be classified into the wrong class, giving me an error of 0.2. The OOB error for the model is 0.16, implying the model misclassified the observation 16 out of 100 times. the model does better than random guessing!
 
 #### Improving the performance  of the model
 
 Model performance depends on the predictors. According to rule of thumb, performance improves as number of predictors increase. However, this can also lead to overfitting of data, which increases the OOB error. Random forests are generally immune from highly correlated predictors, yet it can be helpful to exclude predictors which repeat the information.
 
-For example, in the Firefly Observations dataset, __Latitude__, __Longitude__, __Habitat.ID.__, __State__ and __Country__ contain basically the same information in different forms: Location.
+For example, in the Firefly Observations dataset, __Latitude__, __Longitude__, __Habitat.ID.__, __State__ and __Country__ contain basically the same information in different forms: location.
 
-The __importance()__ function can be used to see which are the most influential predictors based on their mean decrease in prediction accuracy. The importance plot shows the relative importance of the predictors with respect to the Gini Index. From the importance plot, it is clear, and not surprising that temperature and location play an important role. The strong correlation between the location predictors might dominate the less strong, yet more important predictors that appear lower on the plot. This can lead to us drawing wrong conclusions.
+The __importance()__ function can be used to see the most influential predictors based on their mean decrease in prediction accuracy. The importance plot shows the relative importance of the predictors with respect to the Gini Index. From the importance plot, it is clear, and not surprising that temperature and location play an important role. The strong correlation between the location predictors might dominate the less strong, yet more important predictors that appear lower on the plot. This can lead to us drawing wrong conclusions.
 
 ![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/impPlot.rf.firefly.png)
 
-###### *Will it help if we remove all the location predictors and keep only __Latitude__ and __Longitude__?*
-The error plot indicates the model is performing better after removing the __Habitat.ID.__, __State__ and __Country__. The OOB error is 0.13, an improvement from the previous model! This also confirms our suspicion about high correlation between the excluded predictors.
+###### *Will it help the performance if we remove all the location predictors and keep only __Latitude__ and __Longitude__?*
+The error plot indicates the model is performing better after removing the __Habitat.ID.__, __State__ and __Country__. The OOB error is 0.13, an improvement over the previous model! This also confirms our suspicion about high correlation between the excluded predictors.
 
 ![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/errplot.rf.firefly.clean.png)
 
@@ -146,5 +156,40 @@ The hash marks at the base of each plot delineate the deciles of the data distri
 From our analysis we conclude that climate and location of the habitat are extremely important for the survival of fireflies.  in maintaining moisture levels. Human activity also plays an important role, though not as much as climate. From the heat map, it seemed that proximity to the ocean or a huge lake might play an important role, but this was not the case, since __Ocean..yards.away._ features quite low in the importance plot. However, since variables like __Creek.River..yards.away.__ and __Swimming.Pool..yards.away.__ feature way up, sources of water do play an important role in maintaining favorable environment. The moist soil and air near the water source are essential for the [survival](https://legacy.mos.org/fireflywatch/environmental_factors) of the firefly larvae.
 
 ### 5. Identifying the types of fireflies
-Fireflies in the United States predominantly belong to [3 different genera.](https://legacy.mos.org/fireflywatch/types_of_fireflies) I have attempted to identify the genus of the firefly based on the color of their flash and flash pattern. As the flash pattern is different for males and females, I have considered only the male subset of the data based on the __Field.location__ observation. This observation notes if the bug was flying or perched. Typically,[the males flash in flight while they are patrolling an area for females.](https://legacy.mos.org/fireflywatch/identifying_gender)
+Fireflies in the United States predominantly belong to [3 different genera.](https://legacy.mos.org/fireflywatch/types_of_fireflies) I have attempted to identify the genus of the firefly based on the color of their flash and flash pattern. As the flash pattern is different for males and females, I have considered only the male subset of the data based on the __Field.location__ observation. This observation notes if the bug was flying or perched. Typically,[the males flash in flight while they are patrolling an area for females.](https://legacy.mos.org/fireflywatch/identifying_gender) Different types of fireflies flash [different colors.](https://legacy.mos.org/fireflywatch/types_of_fireflies) Fireflies belonging to the genus *Photinus* have a yellow-green flash. *Photuris'* flash is a dark-green and the *Pyractomena* flash with orange color.  Cross-tabulating color and flash pattern,
+```
+> table(attr.firefly[, c("col", "flash")])
+
+              flash
+col            Double Flickering Quadruple Single Triple Variable
+  Green           521        244       128   2253    279      123
+  Orange          237        202        26   1179     60       64
+  Yellow green   1598        626       294  10397    569      311
+```
+
+The *Photinus* seem to be the most common, followed by *Photuris* and *Pyractomena*. However, the possibility of people mis-identifying yellow-green flash as green and vice-versa can distort the results. To counter this, I have included the __Flash.Pattern__ observations. A typical habitat hosts different kinds of fireflies and each firefly needs a method of picking out his or her own kind. Each species of firefly has a fairly distinctive flash pattern and each differ in a [number of ways.](https://legacy.mos.org/fireflywatch/flashing_facts) To know the flashing patterns of different types of fireflies, I have referenced some literature, which I have listed at the bottom of this page.
+Using the flash pattern chart, thus derived, I developed a methodology ti identify the genus of the firefly.
+![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/flowchart.png)
+Cross-tabulating genus and color and genus and flash pattern:
+```
+table(attr.firefly$genus, attr.firefly$flash)
+
+              Double Flickering Quadruple Single Triple Variable
+  Photinus      1598        626       294  12650    569      311
+  Photuris       521        244       128      0    279      123
+  Pyractomena    237        202        26   1179     60       64
+
+> table(attr.firefly$genus, attr.firefly$col)
+
+              Green Orange Yellow green
+  Photinus     2253      0        13795
+  Photuris     1295      0            0
+  Pyractomena     0   1768            0
+```
+in the figure below, I have plotted on the map the firefly population identified by their genus. Not surprisingly, the *Photinus* are the most commonly occurring.
 ![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/genus.plot.png)
+#### References
+1. [The flash chart](https://legacy.mos.org/fireflywatch/images/MOS_FFW_Firefly_Flash_Chart.pdf) hosted on the Museum of Science website.
+2. T Forrest and M Eubanks, Variation in the flash pattern of the firefly,Photuris versicolor quadrifulgens (Coleoptera: Lampyridae), 1995, Journal of Insect Behavior, Volume 8, Issue 1, pp 33-45
+3. J Lloyd, Studies on the Flash Communication System in Photinus Fireflies, 1966, Miscellaneous Publications
+Museum of Zoology, University of Michigan, No. 180
