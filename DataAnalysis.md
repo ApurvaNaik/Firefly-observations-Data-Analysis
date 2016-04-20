@@ -53,17 +53,23 @@ Light.Source..yards.away.|7838
 ##### Missing value treatment
 
  - Mode imputation: In this method we will fill the missing values with the most common value in that column.
- - __Light.Source..yards.away.__ This predictor has nearly 25% missing values. Any kind of imputation can add more bias to the model, so it is best to exclude this predictor from our analysis. This is vey unfortunate, since this predictor might be quite important.
- - __Street.Light..yards.away.__ This predictor has just above 2% missing values, so we will go ahead and replace them with the mode of that column.
+  - __Light.Source..yards.away.__ This predictor has nearly 25% missing values. Any kind of imputation can add more bias to the model, so it is best to exclude this predictor from our analysis. This is vey unfortunate, since this predictor might be quite important.
+  - __Street.Light..yards.away.__ This predictor has just above 2% missing values, so we will go ahead and replace them with the mode of that column.
 
-- Deletion of missing values: Now, the maximum number of missing values any column has is 230, which is less than 2 % of the total data. Also, since most columns have exactly 230 values missing, they are most probably in the same rows. Removing these values from our analysis will not be detrimental to the outcome, so we'll go ahead and delete the rows containing these missing values.
+- Removal of missing values: Now, the maximum number of missing values any column has is 230, which is less than 2 % of the total data. Also, since most columns have exactly 230 values missing, they are most probably in the same rows. Removing these values from our analysis will not be detrimental to the outcome, so we'll go ahead and delete the rows containing these missing values.
 
 ##### Feature Engineering for better representation of variables
-After converting all character variables to factor, we see that some variables like __State__ and __Country__ have many levels.
+I have converted character variables to factors. Factors are variables which take on a limited number of different values, called levels; such variables are often referred to as categorical variables. Some categorical variables like __State__ and __Country__ have many levels.
+```R
+> length(unique(firefly$State))
+[1] 68
+> length(unique(firefly$Country))
+[1] 15
+```
 
-![Alt text](https://github.com/ApurvaNaik/Firefly-observations-Data-Analysis/blob/master/img/image1.png?raw=true)
+![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/levels.png)
 
-From the above figure we see that some variables appear more number of times than other. We will 'bin' these frequently occurring variables and group the ones that appear rarely.
+ Some levels appear more number of times than other.  I have 'binned these frequently occurring levels and created another bin for the ones that appear rarely. This reduces the number of levels and the analysis takes less processor memory.
 #### Identifying the most important predictors
 Here, I have to visualized __Population__ with respect to the categorical predictors:
 
@@ -157,7 +163,7 @@ From our analysis we conclude that climate and location of the habitat are extre
 
 ### 5. Identifying the types of fireflies
 Fireflies in the United States predominantly belong to [3 different genera.](https://legacy.mos.org/fireflywatch/types_of_fireflies) I have attempted to identify the genus of the firefly based on the color of their flash and flash pattern. As the flash pattern is different for males and females, I have considered only the male subset of the data based on the __Field.location__ observation. This observation notes if the bug was flying or perched. Typically,[the males flash in flight while they are patrolling an area for females.](https://legacy.mos.org/fireflywatch/identifying_gender) Different types of fireflies flash [different colors.](https://legacy.mos.org/fireflywatch/types_of_fireflies) Fireflies belonging to the genus *Photinus* have a yellow-green flash. *Photuris'* flash is a dark-green and the *Pyractomena* flash with orange color.  Cross-tabulating color and flash pattern,
-```
+```R
 > table(attr.firefly[, c("col", "flash")])
 
               flash
@@ -171,7 +177,7 @@ The *Photinus* seem to be the most common, followed by *Photuris* and *Pyractome
 Using the flash pattern chart, thus derived, I developed a methodology ti identify the genus of the firefly.
 ![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/flowchart.png)
 Cross-tabulating genus and color and genus and flash pattern:
-```
+```R
 table(attr.firefly$genus, attr.firefly$flash)
 
               Double Flickering Quadruple Single Triple Variable
