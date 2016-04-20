@@ -137,7 +137,7 @@ For example, in the Firefly Observations dataset, __Latitude__, __Longitude__, _
 
 The __importance()__ function can be used to see the most influential predictors based on their mean decrease in prediction accuracy. The importance plot shows the relative importance of the predictors with respect to the Gini Index. From the importance plot, it is clear, and not surprising that temperature and location play an important role. The strong correlation between the location predictors might dominate the less strong, yet more important predictors that appear lower on the plot. This can lead to us drawing wrong conclusions.
 
-![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/impPlot.rf.firefly.png)
+![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/imp.firefly.png)
 
 ###### *Will it help the performance if we remove all the location predictors and keep only __Latitude__ and __Longitude__?*
 The error plot indicates the model is performing better after removing the __Habitat.ID.__, __State__ and __Country__. The OOB error is 0.13, an improvement over the previous model! This also confirms our suspicion about high correlation between the excluded predictors.
@@ -146,7 +146,7 @@ The error plot indicates the model is performing better after removing the __Hab
 
 Looking at the importance plot, as expected, the important predictors are related to temperature and location. __Year__ is not too far behind indicating that there were some warm summers when the firefly population exploded. Human activity like lawn mowing and using pesticides is also fairly important.
 
-![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/impPlot.rf.firefly.clean.png)
+![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/imp.firefly.clean.png)
 
 #### Reassessing the importance of predictors
 This is done by examining the partial dependence plots. A partial dependence plot shows graphically, the marginal effect of a predictor on the class probability when all the other predictors are held at a constant value. The figure below shows single-variable partial dependence plots of the most relevant population predictors. The y axis of the plots are nearly the same, and give a visual comparison of the relative importance of the different predictors.
