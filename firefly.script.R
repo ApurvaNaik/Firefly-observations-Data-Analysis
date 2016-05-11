@@ -7,7 +7,8 @@ library(dplyr) # data manipulation
 library(lubridate) # dates
 library(randomForest) # classification algorithm
 library(ggplot2) # plots
-library(ggthemes) #plots
+library(ggthemes) # plots
+library(ggmap) # maps
 library(corrplot) # correlation plot
 library(colorRamps) # color gradient for variable importance
 library(RCurl) # pull .csv from url
@@ -15,8 +16,9 @@ library(DiagrammeR) # plot flowchart
 
 
 # Data mining of the firefly dataset: Find what factors affect firefly population, predict the population numbers for the test set carved out of this data set
-x = getURL("https://github.com/ApurvaNaik/Firefly-observations-Data-Analysis/blob/master/data/firefly.data1.csv")
-firefly = read.csv(text = x)
+link = "https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/data/firefly.data1.csv"
+x = getURL(link)
+firefly = read.csv(textConnection(x))
 
 # Change name of response variable
 names(firefly)[42] = "Number"
@@ -211,7 +213,7 @@ ggmap(mapusa) + geom_point(data = attr.firefly, aes(x = lon, y = lat, color = ge
 # get map of USA
 mapusa = get_map(location = c(lon = mean(firefly$Longitude), lat = mean(firefly$Latitude)), zoom = 5, color = "bw")
 # heat map of population
-ggmap(mapusa) + geom_density2d(data = pop.data, aes(x = lon, y = lat)) + stat_density2d(aes(x = lon, y = lat, fill = ..level.., alpha = ..level..), size = 0.01, bins = 16, data = pop.data, geom = "polygon") + scale_fill_gradient(low = "green", high = "red")+ theme(legend.position = "none", axis.title = element_blank(), text = element_text(size = 12))
+ggmap(mapusa) + geom_density2d(data = firefly, aes(x = Longitude, y = Latitude)) + stat_density2d(aes(x = Longitude, y = Latitude, fill = ..level.., alpha = ..level..), size = 0.01, bins = 16, data = firefly, geom = "polygon") + scale_fill_gradient(low = "green", high = "red")+ theme(legend.position = "none", axis.title = element_blank(), text = element_text(size = 12))
 
 # plot genus on map
 ggmap(mapusa) + geom_point(data = attr.firefly, aes(x = lon, y = lat, color = genus, alpha = 0.5),na.rm = T, shape = 20) + scale_colour_manual(values = c("greenyellow", "green4", "darkorange1")) + guides(fill=FALSE, alpha=FALSE, size=FALSE)
