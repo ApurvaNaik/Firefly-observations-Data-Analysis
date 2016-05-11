@@ -114,6 +114,7 @@ I'm using random forest to find out the factors most important for survival of f
 In case of random forest, there is no need to split the data into trainig and test sets, because the model does that for us. only a subset of the total data is used for fitting. The remaining observations (also known as Out Of Bag observations) are used to test the fit. The resulting OOB error can then be used to evaluate the model.
 
 ![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/errplot.rf.firefly.png)
+
 #### Evaluating performance of the model
 
  With the inclusion of all relevant predictors, the error plot indicates the model is doing a fair job. This is concluded from the OOB error which is about 0.16.
@@ -139,7 +140,8 @@ The __importance()__ function can be used to see the most influential predictors
 
 ![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/Rplot.png)
 
-###### *Will it help the performance if we remove all the location predictors and keep only __Latitude__ and __Longitude__?*
+#### *Will it help the performance if we remove all the location predictors and keep only __Latitude__ and __Longitude__?*
+
 The error plot indicates the model is performing better after removing the __Habitat.ID.__, __State__ and __Country__. The OOB error is 0.13, an improvement over the previous model! This also confirms our suspicion about high correlation between the excluded predictors.
 
 ![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/errplot.rf.firefly.clean.png)
@@ -162,7 +164,8 @@ The hash marks at the base of each plot delineate the deciles of the data distri
 From our analysis we conclude that climate and location of the habitat are extremely important for the survival of fireflies.  in maintaining moisture levels. Human activity also plays an important role, though not as much as climate. From the heat map, it seemed that proximity to the ocean or a huge lake might play an important role, but this was not the case, since __Ocean..yards.away._ features quite low in the importance plot. However, since variables like __Creek.River..yards.away.__ and __Swimming.Pool..yards.away.__ feature way up, sources of water do play an important role in maintaining favorable environment. The moist soil and air near the water source are essential for the [survival](https://legacy.mos.org/fireflywatch/environmental_factors) of the firefly larvae.
 
 ### 5. Identifying the types of fireflies
-Fireflies in the United States predominantly belong to [3 different genera.](https://legacy.mos.org/fireflywatch/types_of_fireflies) I have attempted to identify the genus of the firefly based on the color of their flash and flash pattern. As the flash pattern is different for males and females, I have considered only the male subset of the data based on the __Field.location__ observation. This observation notes if the bug was flying or perched. Typically,[the males flash in flight while they are patrolling an area for females.](https://legacy.mos.org/fireflywatch/identifying_gender) Different types of fireflies flash [different colors.](https://legacy.mos.org/fireflywatch/types_of_fireflies) Fireflies belonging to the genus *Photinus* have a yellow-green flash. *Photuris'* flash is a dark-green and the *Pyractomena* flash with orange color.  Cross-tabulating color and flash pattern,
+Fireflies in the United States predominantly belong to [3 different genera.](https://legacy.mos.org/fireflywatch/types_of_fireflies) I have attempted to identify the genus of the firefly based on the color of their flash and flash pattern. As the flash pattern is different for males and females, I have considered only the male subset of the data based on the __Field.location__ observation. This observation notes if the bug was flying or perched. Typically,[the males flash in flight while they are patrolling an area for females.](https://legacy.mos.org/fireflywatch/identifying_gender) Different types of fireflies flash [different colors.](https://legacy.mos.org/fireflywatch/types_of_fireflies) Fireflies belonging to the genus *Photinus* have a yellow-green flash. *Photuris'* flash is a dark-green and the *Pyractomena* flash with orange color.  Cross-tabulating color and flash pattern:
+
 ```R
 > table(attr.firefly[, c("col", "flash")])
 
@@ -174,10 +177,12 @@ col            Double Flickering Quadruple Single Triple Variable
 ```
 
 The *Photinus* seem to be the most common, followed by *Photuris* and *Pyractomena*. However, the possibility of people mis-identifying yellow-green flash as green and vice-versa can distort the results. To counter this, I have included the __Flash.Pattern__ observations. A typical habitat hosts different kinds of fireflies and each firefly needs a method of picking out his or her own kind. Each species of firefly has a fairly distinctive flash pattern and each differ in a [number of ways.](https://legacy.mos.org/fireflywatch/flashing_facts) To know the flashing patterns of different types of fireflies, I have referenced some literature, which I have listed at the bottom of this page.
-Using the flash pattern chart, thus derived, I developed a methodology ti identify the genus of the firefly.
+Using the flash pattern chart, thus derived, I developed a methodology to identify the genus of the firefly.
+
 ![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/flowchart.png)
 
 Cross-tabulating genus and color and genus and flash pattern:
+
 ```R
 table(attr.firefly$genus, attr.firefly$flash)
 
@@ -193,9 +198,13 @@ table(attr.firefly$genus, attr.firefly$flash)
   Photuris     1295      0            0
   Pyractomena     0   1768            0
 ```
+
 in the figure below, I have plotted on the map the firefly population identified by their genus. Not surprisingly, the *Photinus* are the most commonly occurring.
+
 ![Alt text](https://raw.githubusercontent.com/ApurvaNaik/Firefly-observations-Data-Analysis/master/img/genus.plot.png)
+
 #### References
+
 1. [The flash chart](https://legacy.mos.org/fireflywatch/images/MOS_FFW_Firefly_Flash_Chart.pdf) hosted on the Museum of Science website.
 2. T Forrest and M Eubanks, Variation in the flash pattern of the firefly,Photuris versicolor quadrifulgens (Coleoptera: Lampyridae), 1995, Journal of Insect Behavior, Volume 8, Issue 1, pp 33-45
 3. J Lloyd, Studies on the Flash Communication System in Photinus Fireflies, 1966, Miscellaneous Publications
